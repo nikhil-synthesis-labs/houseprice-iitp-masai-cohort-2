@@ -38,7 +38,9 @@ with st.sidebar:
     sqft = st.slider("Square footage", min_value=0, max_value=5000, value=1500, step=50)
     bedrooms = st.slider("Bedrooms", min_value=0, max_value=8, value=3, step=1)
     age = st.slider("Age of property (years)", min_value=0, max_value=100, value=10, step=1)
-    location_score = st.slider("Location score (0=rural, 10=prime)", min_value=0.0, max_value=10.0, value=6.0, step=0.5)
+    location_score = st.slider(
+        "Location score (0=rural, 10=prime)", min_value=0.0, max_value=10.0, value=6.0, step=0.5
+    )
 
 model = load_model()
 predicted_price = predict_price(model, sqft, bedrooms, age, location_score)
