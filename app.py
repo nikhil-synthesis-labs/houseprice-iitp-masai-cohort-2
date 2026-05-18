@@ -44,10 +44,22 @@ model = load_model()
 predicted_price = predict_price(model, sqft, bedrooms, age, location_score)
 
 # BUG #2 — Raw float displayed. Should be Indian-formatted currency. Filed as Issue #2.
-st.metric("Predicted Price", f"{predicted_price}")
+# Format as Indian Rupee (lakh/crore grouping)
+def indian_format(n: float) -> str:
+    s = str(int(round(n)))
+    neg = s.startswith("-")
+    s = s.lstrip("-")
+    if len(s) <= 3:
+        return ("-" if neg else "") + "₹" + s
+    last3, rest = s[-3:], s[:-3]
+    grouped = ",".join([rest[j:j+2] for j in range(0, len(rest), 2)][::-1]) + "," + last3
+    return ("-" if neg else "") + "₹" + grouped
+
+st.metric("Predicted Price", indian_format(predicted_price))
 
 # BUG #3 — ZeroDivisionError when sqft = 0. Filed as Issue #3.
-price_per_sqft = predicted_price / sqft
+price_per_sqft = predicted_price / sqft if sqft != 0 else None
+st.write(f"Price per sqft: {"—" if price_per_sqft is None else f"{price_per_sqft:.2f}"}")
 st.write(f"Price per sqft: {price_per_sqft:.2f}")
 
 st.divider()
