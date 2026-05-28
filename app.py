@@ -47,8 +47,11 @@ predicted_price = predict_price(model, sqft, bedrooms, age, location_score)
 st.metric("Predicted Price", f"{predicted_price}")
 
 # BUG #3 — ZeroDivisionError when sqft = 0. Filed as Issue #3.
-price_per_sqft = predicted_price / sqft
-st.write(f"Price per sqft: {price_per_sqft:.2f}")
+if sqft == 0:
+    st.write("Price per sqft: N/A")
+else:
+    price_per_sqft = predicted_price / sqft
+    st.write(f"Price per sqft: {price_per_sqft:.2f}")
 
 st.divider()
 st.subheader("Sample comparable houses")
